@@ -286,7 +286,7 @@ class AuthContextMiddleware(wsgi.Middleware):
     def process_request(self, request):
 
         # The request context stores itself in thread-local memory for logging.
-        oslo_context.RequestContext(
+        request_context = oslo_context.RequestContext(
             request_id=request.environ.get('openstack.request_id'))
 
         if authorization.AUTH_CONTEXT_ENV in request.environ:
@@ -311,5 +311,8 @@ class AuthContextMiddleware(wsgi.Middleware):
                       'the certificate issuer is not trusted. No auth '
                       'context will be set.')
             return
+
+        request_context.update_store()
+
         LOG.debug('RBAC: auth_context: %s', auth_context)
         request.environ[authorization.AUTH_CONTEXT_ENV] = auth_context

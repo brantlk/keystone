@@ -19,7 +19,7 @@ from six.moves import http_client
 from testtools import matchers
 
 from keystone.common import utils
-from keystone.contrib.revoke import model
+from keystone.models import revoke_model
 from keystone.tests.unit import test_v3
 from keystone.token import provider
 
@@ -92,7 +92,7 @@ class OSRevokeTests(test_v3.RestfulTestCase, test_v3.JsonHomeTestMixin):
         sample['project_id'] = six.text_type(project_id)
         before_time = timeutils.utcnow()
         self.revoke_api.revoke(
-            model.RevokeEvent(project_id=project_id))
+            revoke_model.RevokeEvent(project_id=project_id))
 
         resp = self.get('/OS-REVOKE/events')
         events = resp.json_body['events']
@@ -105,7 +105,7 @@ class OSRevokeTests(test_v3.RestfulTestCase, test_v3.JsonHomeTestMixin):
         sample['domain_id'] = six.text_type(domain_id)
         before_time = timeutils.utcnow()
         self.revoke_api.revoke(
-            model.RevokeEvent(domain_id=domain_id))
+            revoke_model.RevokeEvent(domain_id=domain_id))
 
         resp = self.get('/OS-REVOKE/events')
         events = resp.json_body['events']
@@ -127,7 +127,7 @@ class OSRevokeTests(test_v3.RestfulTestCase, test_v3.JsonHomeTestMixin):
         sample['domain_id'] = six.text_type(domain_id)
 
         self.revoke_api.revoke(
-            model.RevokeEvent(domain_id=domain_id))
+            revoke_model.RevokeEvent(domain_id=domain_id))
 
         resp = self.get('/OS-REVOKE/events')
         events = resp.json_body['events']
